@@ -6,7 +6,7 @@ local function getPlayerDetails(source)
         steamid = 'Ukendt',
         license = 'Ukendt',
         discord = 'Ukendt',
-        Name = 'Ukendt',
+        name = 'Ukendt',
     }
     for k, v in ipairs(GetPlayerIdentifiers(source)) do
         if string.find(v, "steam:") then
@@ -19,13 +19,12 @@ local function getPlayerDetails(source)
     end
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer then
-        identifieres.Name = xPlayer.getName()
+        identifieres.name = xPlayer.getName()
     end
     return {
         identifieres = identifieres
     }
 end
-
 function DiscordLog(source, title, message, webhook)
     local we = Server.Webhooks[webhook]
     if not we then
