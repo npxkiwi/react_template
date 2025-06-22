@@ -1,20 +1,73 @@
--- Better written discord log
-
----@param color number -- Color code of the log message
----@param text string -- The message to log
----@param webhook any -- The Discord webhook URL to send the log message to
-function server_log(color,text,webhook)
-   if not color or not text or not webhook then
-        print('Contact the developer to set the server log properly.')
+local function getPlayerDetails(source)
+    if not source or source == 0 then
         return
     end
-    local embed = {
-        {
-            ["color"] = color,
-            ["title"] = "React Template",
-            ["description"] = text,
-            ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%SZ"),
-        }
+    local identifieres = {
+        steamid = 'Ukendt',
+        license = 'Ukendt',
+        discord = 'Ukendt',
+        Name = 'Ukendt',
     }
-    PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({username = 'React Template', embeds = embed}), { ['Content-Type'] = 'application/json' })
+    for k, v in ipairs(GetPlayerIdentifiers(source)) do
+        if string.find(v, "steam:") then
+            identifiers.steamid = v
+        elseif string.find(v, "license:") then
+            identifiers.license = v
+        elseif string.find(v, "discord:") then
+            identifiers.discord = v
+        end
+    end
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer then
+        identifieres.Name = xPlayer.getName()
+    end
+    return {
+        identifieres = identifieres
+    }
+end
+
+function DiscordLog(source, title, message, webhook)
+    local we = Server.Webhooks[webhook]
+    if not we then
+        print('Webhook blev ikke fundet')
+        return
+    end
+
+    local PlInfo = {}
+    if source and source > 0 then
+        PlInfo = getPlayerDetails(source)
+    end
+    local tit = title:gsub("^%1", string.upper)
+    local aa = {}
+    table.insert(aa, {
+        name = "Tid",
+        value = os.date("%d/%m/%Y %H:%M:%S")
+    })
+    table.insert(aa, {
+        name = "Spiller",
+        value = PlInfo.identifiers.name.. " (ID: "..source..")"
+    })
+    table.insert(aa,{
+        name = "Identifikatorer",
+        value = "Steam: "..PlInfo.identifiers.steamid .. "\nLicense: ".. PlInfo.identifieres.license
+    })
+    table.insert(aa, {
+        name = "Detaljer",
+        value = message
+    })
+    local payload = {
+        content = nil,
+        embeds = {
+            {
+                title = "React_Template - " .. title .. "\n",
+                color = 5763719,
+                author = {
+                name = "React Template",
+                },
+                fields = fields,
+                description = "FRA React Template",
+            }
+            },
+        }
+    PerformHttpRequest(we, function(err, text, headers) end, 'POST', json.encode(payload), { ['Content-Type'] = 'application/json' })
 end
