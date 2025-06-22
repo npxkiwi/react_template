@@ -1,9 +1,10 @@
+Client = lib.require('cl_cfg')
 local hasLoadedUi = false
 
 lib.locale()
 
-RegisterNetEvent(Config.ResourceName .. ":openTestMenu")
-AddEventHandler(Config.ResourceName .. ":openTestMenu", function()
+RegisterNetEvent(Client.ResourceName .. ":openTestMenu")
+AddEventHandler(Client.ResourceName .. ":openTestMenu", function()
     setupUi()
 
     SendNUIMessage({
@@ -12,8 +13,8 @@ AddEventHandler(Config.ResourceName .. ":openTestMenu", function()
     SetNuiFocus(true, true)
 end)
 
-RegisterNetEvent(Config.ResourceName .. ":openAdminMenu")
-AddEventHandler(Config.ResourceName .. ":openAdminMenu", function()
+RegisterNetEvent(Client.ResourceName .. ":openAdminMenu")
+AddEventHandler(Client.ResourceName .. ":openAdminMenu", function()
     setupUi()
 
     SendNUIMessage({

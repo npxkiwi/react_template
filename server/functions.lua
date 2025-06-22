@@ -1,32 +1,20 @@
----Sending a log to discord
----@param color number
----@param title string
----@param message string
----@param webhook string
-function SendDiscordLog(color, title, message, webhook, source)
-    if Config.Webhook.enable then
-        local identifiers = GetPlayerIdentifiers(source)
-        local identifierString = ""
-        if identifiers then
-            for _, id in ipairs(identifiers) do
-                identifierString = identifierString .. id .. "\n"
-            end
-        end
+-- Better written discord log
 
-        local embed = {
-            {
-                ['color'] = color,
-                ['title'] = title,
-                ['description'] = message .. "\n\n**Identifiers:**\n" .. identifierString,
-
-                ['footer'] = {
-                    ['text'] = "NN Refund - " .. os.date('%d/%m/%Y %H:%M:%S')
-                }
-            }
-        }
-
-        PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({ embeds = embed }), {
-            ['Content-Type'] = 'application/json'
-        })
+---@param color number -- Color code of the log message
+---@param text string -- The message to log
+---@param webhook any -- The Discord webhook URL to send the log message to
+function server_log(color,text,webhook)
+   if not color or not text or not webhook then
+        print('Contact the developer to set the server log properly.')
+        return
     end
+    local embed = {
+        {
+            ["color"] = color,
+            ["title"] = "React Template",
+            ["description"] = text,
+            ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%SZ"),
+        }
+    }
+    PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({username = 'React Template', embeds = embed}), { ['Content-Type'] = 'application/json' })
 end

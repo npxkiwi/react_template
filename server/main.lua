@@ -1,23 +1,20 @@
+Server = lib.require('sv_cfg')
 lib.locale()
 
---[[
-    Made in server side to ensure easy access to the ESX object and other server-side functions.
-]]
-
-lib.addCommand(Config.CommandTest, {
-    restricted = Config.CommandAccess
+lib.addCommand(Server.CommandTest, {
+    restricted = Server.CommandAccess
 }, function(source, args, rawCommand)
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer then
-        TriggerClientEvent(Config.ResourceName .. ":openTestMenu", source)
+        TriggerClientEvent(Server.ResourceName .. ":openTestMenu", source)
     end
 end)
 
-lib.addCommand(Config.CommandAdmin, {
-    restricted = Config.CommandAccessAdmin
+lib.addCommand(Server.CommandAdmin, {
+    restricted = Server.CommandAccessAdmin
 }, function(source, args, rawCommand)
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer then
-        TriggerClientEvent(Config.ResourceName .. ":openAdminMenu", source)
+        TriggerClientEvent(Server.ResourceName .. ":openAdminMenu", source)
     end
 end)
